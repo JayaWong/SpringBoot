@@ -1,20 +1,21 @@
 server:
   port: 8090
 spring:
-  datasource:
-    type: 
-    dbcp:
-      url: jdbc:mysql://localhost:3306/jaya_test
-      username: root
-      password: 12345678
+  datasource: 
+    type: org.apache.commons.dbcp.BasicDataSource
+    driver-class-name: com.mysql.jdbc.Driver
+    url: jdbc:mysql://localhost:3306/jaya_example
+    username: root
+    password: root
   thymeleaf:
     encoding: UTF-8
     content-type: text/html; charset=utf-8
     cache: false
     prefix: classpath:/templates/
+    suffix: .html
 logging:
   path: log/
   file: demo.log
-  level:
-    root: error
+  level: 
+    root: dubug
     com.jaya.demo: debug
