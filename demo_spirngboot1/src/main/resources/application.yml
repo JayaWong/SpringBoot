@@ -13,6 +13,9 @@ spring:
     cache: false
     prefix: classpath:/templates/
     suffix: .html
+  devtools:
+    restart:
+      enabled: false
 logging:
   path: log/
   file: demo.log
