@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="common/header :: common_header('首页','')">
+</head>
+<body>
+<button onclick="wong()">go</button>
+<div id="fuck" style="border:3px solid #eee;width:100px;height:100px;background:green;position:relative">
+<span id="ppp" th:text="${name}"></span>
+</div>
+</body>
+<script type="text/javascript">
+	/*<![CDATA[*/
+	window.onload=function(){
+		alert(1);
+	}
+	function wong(){
+		for(var i=0;i<10;i++){
+			console.log($('div #fuck'));
+			$('#fuck').animate({left:'250px'});
+			$("span,#ppp").css("color","red");
+			$('div,#fuck').animate({top:'250px'},"slow");
+			$('div,#fuck').animate({left:''},"slow");
+			$('div,#fuck').animate({top:''},"slow");
+		
+		}
+	}
+	/*]]>*/
+</script>
+<footer th:replace="common/footer :: common_footer"></footer>
+</html>
