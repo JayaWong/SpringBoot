@@ -20,8 +20,12 @@
 				<div class="table-responsive">
 					<table class="table table-striped">
 						<thead>
-							<tr th:each="thds:${thead}">
-								<th th:text="${thds}">编号</th>
+							<tr>
+								<th>编号</th>
+								<th>姓名</th>
+								<th>创建时间</th>
+								<th>状态</th>
+								<th>操作</th>
 							</tr>
 						</thead>
 						<tbody th:each="tbds:${dataList}">
