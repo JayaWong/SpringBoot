@@ -1,10 +1,13 @@
 package com.jaya.demo;
 
+import javax.servlet.http.HttpServletRequest;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 
@@ -24,8 +27,21 @@ public class Hello_1 {
 	 * @author:[王剑英]
 	 */
 	@GetMapping("/getHello")
-	public String getHello(Model model) {
-		model.addAttribute("name", "thymeleaf");
+	public String getHello(Model model,HttpServletRequest request) {
+		model.addAttribute("name", "这是一个神奇的网站!");
+		if (request.getSession().getAttribute("user")!=null) {
+			model.addAttribute("user", request.getSession().getAttribute("user"));
+		}
 		return "index";
+	}
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
+	@PostMapping("/doLogin")
+	public String doLogin(Model model,String userName,String passWord,HttpServletRequest request) {
+		request.getSession().setAttribute("user", userName);
+		model.addAttribute("user", userName);
+		return "redirect:getHello";
 	}
 }
