@@ -5,7 +5,8 @@
 <title>hello thymeleaf</title>
 </head>
 <body>
-<p th:text="'Hello '+${user.userName} + '!!'">hello world!
+<p th:text="'Hello '+${name} + '!!'">hello world!
 </p>
+<button th:alt-title="${title}" title="this is original title">按钮</button>
 </body>
 </html>

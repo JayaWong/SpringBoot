@@ -1,18 +1,43 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 <head th:fragment="common_header(title,links)">
-<meta charset="UTF-8"/>
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<meta charset="UTF-8" />
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
 <title th:text="${title}"></title>
 <script type="text/javascript" src="/static/jquery3_2_1.js"></script>
 <!-- 引入 Bootstrap -->
-<link href="/static/bootstrap.min.css" rel="stylesheet"/>
+<link href="/static/bootstrap.min.css" rel="stylesheet" />
 
 <!-- HTML5 Shiv 和 Respond.js 用于让 IE8 支持 HTML5元素和媒体查询 -->
 <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
-<script src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
+<script
+	src="https://oss.maxcdn.com/libs/respond.js/1.3.0/respond.min.js"></script>
 
 <script src="/static/bootstrap.min.js"></script>
-<link th:if="! ${links} eq ''" rel="stylesheet" href="${links}"/>
+<link th:if="${links} ne ''" rel="stylesheet" th:href="${links}" />
+<nav class="navbar navbar-inverse navbar-fixed-top">
+	<div class="container-fluid">
+		<div class="navbar-header">
+			<button type="button" class="navbar-toggle collapsed"
+				data-toggle="collapse" data-target="#navbar" aria-expanded="false"
+				aria-controls="navbar">
+				<span class="sr-only">Toggle navigation</span> <span
+					class="icon-bar"></span> <span class="icon-bar"></span> <span
+					class="icon-bar"></span>
+			</button>
+			<a class="navbar-brand" href="#">一个神奇的网站</a>
+		</div>
+		<div id="navbar" class="navbar-collapse collapse">
+			<ul class="nav navbar-nav navbar-right">
+				<li><a href="#" onclick="javasricp:alert('nothing...I m sorry')">退出</a></li>
+				<li><a href="#" onclick="javasricp:alert('nothing...I m sorry')">登录</a></li>
+			</ul>
+			<form class="navbar-form navbar-right">
+				<input type="text" class="form-control" placeholder="搜索..."/>
+			</form>
+		</div>
+	</div>
+</nav>
 </head>
 </html>
