@@ -1,5 +1,6 @@
 package com.jaya.demo;
 
+import java.util.Date;
 import java.util.List;
 
 import javax.annotation.Resource;
@@ -66,6 +67,7 @@ public class Hello_1 {
 	}
 	@PostMapping("/applyLeave")
 	public String applyLeave(Model model,Leave leave,@SessionAttribute(name="user")User user) {
+		leave.setLeaveDate(new Date());
 		this.leaveService.save(user, leave);
 		return "redirect:getHello";
 	}

@@ -36,8 +36,9 @@
 						<thead>
 							<tr>
 								<th>编号</th>
-								<th>姓名</th>
-								<th>创建时间</th>
+								<th>天数</th>
+								<th>请假时间</th>
+								<th>内容</th>
 								<th>状态</th>
 								<th>操作</th>
 							</tr>
@@ -45,10 +46,19 @@
 						<tbody th:each="tbds:${dataList}">
 							<tr>
 								<td th:text="${tbds.id}">1,001</td>
-								<td th:text="${tbds.userName}">Lorem</td>
-								<td th:text="${tbds.createDate}">ipsum</td>
-								<td th:text="${tbds.status}">dolor</td>
-								<td>sit</td>
+								<td th:text="${tbds.days}">Lorem</td>
+								<td th:text="${tbds.leaveDate}">ipsum</td>
+								<td th:text="${tbds.content}">ipsum</td>
+								<td th:switch="${tbds.status}">
+									<p th:case="0">初始录入</p>
+									<p th:case="1">审核中</p>
+									<p th:case="3">审核通过</p>
+									<p th:case="4">审核驳回</p>
+								</td>
+								<td>
+									<a>查看</a>
+									<a>提交</a>
+								</td>
 							</tr>
 
 						</tbody>
