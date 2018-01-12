@@ -74,5 +74,11 @@ public class User implements Serializable{
 	public void setBirthday(Date birthday) {
 		this.birthday = birthday;
 	}
+	public User getLeader() {
+		return leader;
+	}
+	public void setLeader(User leader) {
+		this.leader = leader;
+	}
 
 }

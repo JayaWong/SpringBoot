@@ -57,7 +57,7 @@
 								</td>
 								<td>
 									<a>查看</a>
-									<a>提交</a>
+									<a href="#" th:onclick="|confirmLeave(${tbds.id})|">提交</a>
 								</td>
 							</tr>
 
@@ -70,6 +70,17 @@
 </body>
 <script type="text/javascript">
 	/*<![CDATA[*/
+		function confirmLeave(leaveId){
+			$.ajax({
+				url:'confirmLeave',
+				type:'post',
+				data:{id:leaveId},
+				success:function(e){
+					location.reload();
+				}
+			})
+		}
+	
 	/*]]>*/
 </script>
 <footer th:replace="common/footer :: common_footer"></footer>

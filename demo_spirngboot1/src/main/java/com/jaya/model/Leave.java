@@ -25,6 +25,8 @@ public class Leave {
 	private Date leaveDate;
 	@Column(columnDefinition="varchar(512) not null comment '请假内容'")
 	private String content;
+	@Column(columnDefinition="int(11) not null comment '申请状态'")
+	private Integer status;
 	@ManyToOne(fetch=FetchType.EAGER)
 	@JoinColumn(name="user_id",columnDefinition="int(11) not null comment '用户id'")
 	private User user;
@@ -57,6 +59,12 @@ public class Leave {
 	}
 	public void setUser(User user) {
 		this.user = user;
+	}
+	public Integer getStatus() {
+		return status;
+	}
+	public void setStatus(Integer status) {
+		this.status = status;
 	}
 	
 }

@@ -19,10 +19,10 @@ spring:
     suffix: .html
   mvc:
     static-path-pattern: /static/**
-          
-  devtools:
-    restart:
-      enabled: false
+  jpa:
+    show-sql: true
+    hibernate:
+      ddl-auto: update
 logging:
   path: log/
   file: demo.log

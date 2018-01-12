@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.jaya.model.Leave;
 import com.jaya.model.User;
+import com.jaya.service.ActivitiService;
 import com.jaya.service.LeaveService;
 import com.jaya.service.UserService;
 
@@ -32,6 +33,8 @@ public class Hello_1 {
 	private UserService userService;
 	@Resource
 	private LeaveService leaveService;
+	@Resource
+	private ActivitiService activitiService;
 	/**
 	 * <p>Description:[hello world]</p>
 	 * Created on 2017年12月20日
@@ -39,7 +42,7 @@ public class Hello_1 {
 	 * @return html
 	 * @author:[王剑英]
 	 */
-	@GetMapping("/getHello")
+	@GetMapping("/index")
 	public String getHello(Model model,HttpServletRequest request) {
 		model.addAttribute("name", "这是一个神奇的网站!");
 		User user = (User)request.getSession().getAttribute("user");
@@ -58,8 +61,8 @@ public class Hello_1 {
 	public String doLogin(Model model,User user,HttpServletRequest request) {
 		User result = this.userService.login(user);
 		if(result != null ) {
-			request.getSession().setAttribute("user", user);
-			return "redirect:getHello";
+			request.getSession().setAttribute("user", result);
+			return "redirect:index";
 		}else {
 			return "login";
 		}
@@ -68,12 +71,15 @@ public class Hello_1 {
 	@PostMapping("/applyLeave")
 	public String applyLeave(Model model,Leave leave,@SessionAttribute(name="user")User user) {
 		leave.setLeaveDate(new Date());
+		leave.setStatus(0);
 		this.leaveService.save(user, leave);
-		return "redirect:getHello";
+		return "redirect:index";
 	}
-	
-	public String commitLeave(Integer id,@SessionAttribute(name="user") User user) {
-//		new le
-		return null;
+	@PostMapping("/confirmLeave")
+	public void confirmLeave(Integer id,@SessionAttribute(name="user") User user) {
+		Leave leave = new Leave();
+		leave.setId(id);
+		leave.setUser(user);
+		this.activitiService.startProcess(leave);
 	}
 }
