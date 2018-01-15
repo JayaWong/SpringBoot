@@ -5,6 +5,7 @@ import java.util.List;
 
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,6 +21,7 @@ import com.jaya.model.User;
 import com.jaya.service.ActivitiService;
 import com.jaya.service.LeaveService;
 import com.jaya.service.UserService;
+import com.jaya.vo.LeaveTask;
 
 
 @Controller
@@ -53,6 +55,18 @@ public class Hello_1 {
 		}
 		return "index";
 	}
+	@GetMapping("/task")
+	public String task(Model model,@SessionAttribute(name="user")User user) {
+		if (user!=null) {
+			List<LeaveTask> list = this.activitiService.getRunList(user);
+			model.addAttribute("dataList", list);
+			model.addAttribute("user", user);
+			return "task";
+		}else {
+			return "index";
+		}
+		
+	}
 	@GetMapping("/login")
 	public String login() {
 		return "login";
@@ -76,10 +90,15 @@ public class Hello_1 {
 		return "redirect:index";
 	}
 	@PostMapping("/confirmLeave")
-	public void confirmLeave(Integer id,@SessionAttribute(name="user") User user) {
+	public void confirmLeave(Integer id,@SessionAttribute(name="user") User user,HttpServletResponse response) {
 		Leave leave = new Leave();
 		leave.setId(id);
 		leave.setUser(user);
 		this.activitiService.startProcess(leave);
+	}
+	@PostMapping("/completeLeave")
+	public void completeLeave(Leave leave,@SessionAttribute(name="user") User user,String message) {
+		leave.setUser(user);
+		this.activitiService.completeTask(leave, message);
 	}
 }
