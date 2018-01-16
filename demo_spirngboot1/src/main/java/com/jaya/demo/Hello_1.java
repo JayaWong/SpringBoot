@@ -14,6 +14,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.SessionAttribute;
 
 import com.jaya.model.Leave;
@@ -56,11 +57,12 @@ public class Hello_1 {
 		return "index";
 	}
 	@GetMapping("/task")
-	public String task(Model model,@SessionAttribute(name="user")User user) {
+	public String task(Model model,@SessionAttribute(name="user",required=false)User user) {
 		if (user!=null) {
 			List<LeaveTask> list = this.activitiService.getRunList(user);
 			model.addAttribute("dataList", list);
 			model.addAttribute("user", user);
+			model.addAttribute("name", "这是一个神奇的网站!&emsp;&emsp;当前任务");
 			return "task";
 		}else {
 			return "index";
@@ -83,22 +85,34 @@ public class Hello_1 {
 		
 	}
 	@PostMapping("/applyLeave")
-	public String applyLeave(Model model,Leave leave,@SessionAttribute(name="user")User user) {
+	public String applyLeave(Model model,Leave leave,@SessionAttribute(name="user",required=false)User user) {
 		leave.setLeaveDate(new Date());
 		leave.setStatus(0);
 		this.leaveService.save(user, leave);
 		return "redirect:index";
 	}
 	@PostMapping("/confirmLeave")
-	public void confirmLeave(Integer id,@SessionAttribute(name="user") User user,HttpServletResponse response) {
+	@ResponseBody
+	public String confirmLeave(Integer id,@SessionAttribute(name="user",required=false) User user,HttpServletResponse response) {
 		Leave leave = new Leave();
 		leave.setId(id);
 		leave.setUser(user);
 		this.activitiService.startProcess(leave);
+		return "{\"msg\":\"ok\"}";
 	}
 	@PostMapping("/completeLeave")
-	public void completeLeave(Leave leave,@SessionAttribute(name="user") User user,String message) {
+	@ResponseBody
+	public String completeLeave(Leave leave,@SessionAttribute(name="user",required=false) User user,String message) {
 		leave.setUser(user);
 		this.activitiService.completeTask(leave, message);
+		return "{\"msg\":\"ok\"}";
+	}
+	@GetMapping("/history")
+	public String historyTask(Model model, @SessionAttribute(name="user",required=false) User user) {
+		model.addAttribute("user", user);
+		List<LeaveTask> list = this.activitiService.historyTask(user);
+		model.addAttribute("dataList", list);
+		model.addAttribute("name", "这是一个神奇的网站!&emsp;&emsp;历史任务");
+		return "history";
 	}
 }

@@ -25,7 +25,7 @@
 					<li class="active"><a href="">我的任务</a></li>
 				</ul>
 				<ul class="nav nav-sidebar">
-					<li class="active"><a href="">历史记录</a></li>
+					<li class="active"><a href="history">历史记录</a></li>
 				</ul>
 			</div>
 
@@ -48,7 +48,7 @@
 								<td th:text="${tbds.content}">ipsum</td>
 								<td>
 									<a>查看</a>
-									<a th:each="oprt:${tbds.operation}"  th:text="${oprt}"  th:onclick="|confirmLeave(${tbds.id},${oprt})|">
+									<a href="#" th:each="oprt:${tbds.operation}"  th:text="${oprt}"  th:onclick="|confirmLeave(${tbds.id},'${oprt}')|">
 									保存
 									</a>
 								</td>
@@ -65,14 +65,13 @@
 	/*<![CDATA[*/
 		function confirmLeave(leaveId,oprt){
 			var urlParam = 'completeLeave';
-			if(oprt=='申请'){
-				urlParam = 'confirmLeave';
-			}
 			$.ajax({
 				url:urlParam,
 				type:'post',
+				dataType:'json',
 				data:{id:leaveId,message:oprt},
 				success:function(e){
+					alert(e.msg);
 					location.reload();
 				}
 			});

@@ -4,6 +4,7 @@ import java.util.List;
 
 public class LeaveTask {
 	private Integer id;
+	private String userName;
 	private String typeName;
 	private String content;
 	private List<String> operation;
@@ -30,5 +31,11 @@ public class LeaveTask {
 	}
 	public void setOperation(List<String> operation) {
 		this.operation = operation;
+	}
+	public String getUserName() {
+		return userName;
+	}
+	public void setUserName(String userName) {
+		this.userName = userName;
 	}
 }

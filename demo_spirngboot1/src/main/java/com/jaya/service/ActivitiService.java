@@ -1,12 +1,16 @@
 package com.jaya.service;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
 import javax.annotation.Resource;
 
 import org.activiti.engine.ProcessEngine;
+import org.activiti.engine.history.HistoricProcessInstance;
+import org.activiti.engine.history.HistoricTaskInstance;
+import org.activiti.engine.history.ProcessInstanceHistoryLog;
 import org.activiti.engine.impl.persistence.entity.ProcessDefinitionEntity;
 import org.activiti.engine.impl.pvm.PvmTransition;
 import org.activiti.engine.impl.pvm.process.ActivityImpl;
@@ -38,17 +42,26 @@ public class ActivitiService{
 	public void completeTask(Leave leave,String message) {
 		Task singleResult = this.processEngine.getTaskService()
 												.createTaskQuery()
-												.processInstanceBusinessKey(leave.getId()+"")
-												.taskAssignee(leave.getUser().getId()+"")
+												.taskId(leave.getId()+"")
 												.singleResult();
 		HashMap<String, Object> var = new HashMap<String,Object>();
-		var.put("parentId", leave.getUser().getLeader().getId());
+		if(leave.getUser().getLeader()!=null) {
+			var.put("parentId", leave.getUser().getLeader().getId());
+		}
 		if(message != null && !message.equals("")) {
 			var.put("message", message);
 		}
-		this.processEngine.getTaskService().complete(singleResult.getId(), var);
-		Leave findOne = this.leaveDao.findOne(leave.getId());
-		findOne.setStatus(2);
+		this.processEngine.getTaskService().complete(leave.getId()+"", var);
+		ProcessInstance instance = this.processEngine.getRuntimeService().createProcessInstanceQuery().processInstanceId(singleResult.getProcessInstanceId()).singleResult();
+		HistoricProcessInstance historicProcessInstance = this.processEngine.getHistoryService().createHistoricProcessInstanceQuery().processInstanceId(singleResult.getProcessInstanceId()).singleResult();
+		Leave findOne = this.leaveDao.findOne(Integer.parseInt(historicProcessInstance.getBusinessKey()));
+		if(instance == null ) {
+			findOne.setStatus(3);
+		}else if(message != null && message.equals("驳回")){
+			findOne.setStatus(4);
+		}else {
+			findOne.setStatus(2);
+		}
 		this.leaveDao.save(findOne);
 	}
 	public List<LeaveTask> getRunList(User user) {
@@ -67,9 +80,12 @@ public class ActivitiService{
 				ProcessInstance processInstance = this.processEngine.getRuntimeService()
 						.createProcessInstanceQuery().processInstanceId(processInstanceId).singleResult();
 				Leave leave = this.leaveDao.findOne(Integer.parseInt(processInstance.getBusinessKey()));
+				if(leave == null) {
+					continue;
+				}
 				leaveTask.setContent(leave.getContent());
 				leaveTask.setTypeName("请假");
-				ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) this.processEngine
+ 				ProcessDefinitionEntity processDefinition = (ProcessDefinitionEntity) this.processEngine
 						.getRepositoryService().getProcessDefinition(task.getProcessDefinitionId());
 				String activityId = processInstance.getActivityId();
 				ActivityImpl activity = processDefinition.findActivity(activityId);
@@ -88,5 +104,25 @@ public class ActivitiService{
 			}
 		}
 		return dataList;							
+	}
+	public List<LeaveTask> historyTask(User user) {
+		List<HistoricTaskInstance> list = this.processEngine.getHistoryService()
+				.createHistoricTaskInstanceQuery().taskAssignee(user.getId()+"").finished().list();
+		ArrayList<LeaveTask> result = new ArrayList<LeaveTask>();
+		if (list != null && list.size() > 0) {
+			for (HistoricTaskInstance historicTaskInstance : list) {
+				String processInstanceId = historicTaskInstance.getProcessInstanceId();
+				ProcessInstanceHistoryLog singleResult = this.processEngine.getHistoryService().createProcessInstanceHistoryLogQuery(processInstanceId).singleResult();
+				String id = singleResult.getBusinessKey();
+				Leave leave = this.leaveDao.findOne(Integer.parseInt(id));
+				LeaveTask leaveTask = new LeaveTask();
+				leaveTask.setId(Integer.parseInt(historicTaskInstance.getId()));
+				leaveTask.setContent(leave.getContent());
+				leaveTask.setUserName(leave.getUser().getUserName());
+				leaveTask.setTypeName("请假");
+				result.add(leaveTask);
+			}
+		}
+		return result;
 	}
 }
