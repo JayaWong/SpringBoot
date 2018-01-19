@@ -2,6 +2,8 @@ server:
   port: 8090
   context-path: ""
 spring:
+  profiles:
+    active: dev
   datasource: 
     type: org.apache.commons.dbcp.BasicDataSource
     driver-class-name: com.mysql.jdbc.Driver
@@ -29,3 +31,5 @@ logging:
   level: 
     root: dubug
     com.jaya.demo: debug
+test: 
+  bbb: ${dev.aaa}

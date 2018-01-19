@@ -1,7 +1,6 @@
 package com.jaya.service;
 
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
@@ -31,7 +30,6 @@ public class ActivitiService{
 	private LeaveDao leaveDao;
 	
 	public void startProcess(Leave leave) {
-		
 		HashMap<String, Object> var = new HashMap<String,Object>();
 		var.put("userId", leave.getUser().getId());
 		this.processEngine.getRuntimeService().startProcessInstanceByKey("Leave", leave.getId()+"", var);
@@ -72,7 +70,6 @@ public class ActivitiService{
 									.list();
 		ArrayList<LeaveTask> dataList = new ArrayList<LeaveTask>();
 		if(list != null && list.size() > 0) {
-			
 			for (Task task : list) {
 				LeaveTask leaveTask = new LeaveTask();
 				leaveTask.setId(Integer.parseInt(task.getId()));

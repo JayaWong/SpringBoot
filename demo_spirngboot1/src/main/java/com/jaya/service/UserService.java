@@ -10,7 +10,7 @@ import com.jaya.model.User;
 @Service
 public class UserService {
 	@Resource
-	private UserDao userDao;
+	private UserDao  userDao;
 	public User register(User user) {
 		User save = this.userDao.save(user);
 		return save;
