@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head
+	th:replace="common/header :: common_header('任务列表','/static/dashboard.css')">
+</head>
+<body>
+	<!-- 	<div th:replace="common/lefter::common_lefter"></div> -->
+	<div class="container-fluid">
+		<div class="row">
+			<div class="col-sm-3 col-md-2 sidebar">
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="index">我的申请</a></li>
+					<li><a href="#" onclick="javascript:$('#dialog').dialog();">申请</a></li>
+				</ul>
+				<div id="dialog" title="申请假期" style="display: none">
+					<form class="form-signin" action="/thymeleaf/applyLeave" method="post">
+						<input type="text"  class="form-control" name="days"
+							placeholder="天数" required="required" autofocus="autofocus" /> 
+						<input type="text"  class="form-control"
+							name="content" placeholder="内容" required="required" />
+						<button class="btn btn-lg btn-primary btn-block" type="submit">申请</button>
+					</form>
+				</div>
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="">我的任务</a></li>
+				</ul>
+				<ul class="nav nav-sidebar">
+					<li class="active"><a href="history">历史记录</a></li>
+				</ul>
+			</div>
+
+			<div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main ">
+
+				<div class="table-responsive">
+					<table class="table table-striped">
+						<thead>
+							<tr>
+								<th>编号</th>
+								<th>类型</th>
+								<th>内容</th>
+								<th>操作</th>
+							</tr>
+						</thead>
+						<tbody th:each="tbds:${dataList}">
+							<tr>
+								<td th:text="${tbds.id}">1,001</td>
+								<td th:text="${tbds.typeName}">请假</td>
+								<td th:text="${tbds.content}">ipsum</td>
+								<td>
+									<a>查看</a>
+									<a href="#" th:each="oprt:${tbds.operation}"  th:text="${oprt}"  th:onclick="|confirmLeave(${tbds.id},'${oprt}')|">
+									保存
+									</a>
+								</td>
+							</tr>
+
+						</tbody>
+					</table>
+				</div>
+			</div>
+		</div>
+	</div>
+</body>
+<script type="text/javascript">
+	/*<![CDATA[*/
+		function confirmLeave(leaveId,oprt){
+			var urlParam = 'completeLeave';
+			$.ajax({
+				url:urlParam,
+				type:'post',
+				dataType:'json',
+				data:{id:leaveId,message:oprt},
+				success:function(e){
+					alert(e.msg);
+					location.reload();
+				}
+			});
+		}
+	/*]]>*/
+</script>
+<footer th:replace="common/footer :: common_footer"></footer>
+</html>
